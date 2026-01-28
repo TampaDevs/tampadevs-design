@@ -12,6 +12,8 @@ export interface CalendarEvent {
   isOnline?: boolean;
 }
 
+export type CalendarVariant = 'light' | 'dark';
+
 export interface CalendarProps {
   events?: CalendarEvent[];
   days?: number;
@@ -20,6 +22,10 @@ export interface CalendarProps {
   title?: string;
   onEventClick?: (event: CalendarEvent) => void;
   className?: string;
+  /** Visual variant - 'light' for light backgrounds, 'dark' for glass-dark style */
+  variant?: CalendarVariant;
+  /** Remove max-height constraint, letting the page scroll instead of the calendar body */
+  fullHeight?: boolean;
 }
 
 interface CalendarDay {
@@ -84,8 +90,12 @@ export function Calendar({
   title,
   onEventClick,
   className,
+  variant = 'dark',
+  fullHeight = false,
 }: CalendarProps) {
   const calendarDays = groupEventsByDate(events, days, hideEmpty);
+  const variantClass = variant === 'light' ? 'td-calendar--light' : 'td-calendar--dark';
+  const heightClass = fullHeight ? 'td-calendar--full-height' : '';
 
   const renderEvent = (event: CalendarEvent) => {
     const content = (
@@ -157,7 +167,7 @@ export function Calendar({
 
   return (
     <>
-      <div className={clsx('td-calendar', className)}>
+      <div className={clsx('td-calendar', variantClass, heightClass, className)}>
         {title && (
           <div className="td-calendar__header">
             <h2 className="td-calendar__title">{title}</h2>
@@ -180,27 +190,19 @@ export function Calendar({
 function CalendarStyles() {
   return (
     <style>{`
+      /* Base styles */
       .td-calendar {
-        background: rgba(28, 36, 56, 0.8);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 0.875rem;
         overflow: hidden;
-        box-shadow:
-          inset 0 1px 1px 0 rgba(255, 255, 255, 0.05),
-          0 8px 24px -4px rgba(0, 0, 0, 0.15);
       }
 
       .td-calendar__header {
         padding: 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       }
 
       .td-calendar__title {
         font-size: 1.25rem;
         font-weight: 700;
-        color: white;
         margin: 0;
       }
 
@@ -208,20 +210,19 @@ function CalendarStyles() {
         max-height: 600px;
         overflow-y: auto;
         scrollbar-width: thin;
-        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      }
+
+      .td-calendar--full-height .td-calendar__body {
+        max-height: none;
+        overflow-y: visible;
       }
 
       .td-calendar__day-row {
         display: flex;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       }
 
       .td-calendar__day-row:last-child {
         border-bottom: none;
-      }
-
-      .td-calendar__day-row--today {
-        background: rgba(59, 130, 246, 0.1);
       }
 
       .td-calendar__day-header {
@@ -229,18 +230,12 @@ function CalendarStyles() {
         width: 80px;
         padding: 1rem;
         text-align: center;
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
         position: sticky;
         top: 0;
         align-self: flex-start;
-        background: rgba(28, 36, 56, 0.95);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         z-index: 1;
-      }
-
-      .td-calendar__day-row--today .td-calendar__day-header {
-        background: rgba(59, 130, 246, 0.15);
       }
 
       .td-calendar__day-weekday {
@@ -248,7 +243,6 @@ function CalendarStyles() {
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: rgba(209, 213, 219, 0.9);
       }
 
       .td-calendar__day-row--today .td-calendar__day-weekday {
@@ -258,13 +252,11 @@ function CalendarStyles() {
       .td-calendar__day-date {
         font-size: 1.5rem;
         font-weight: 700;
-        color: white;
         line-height: 1.2;
       }
 
       .td-calendar__day-month {
         font-size: 0.75rem;
-        color: rgba(209, 213, 219, 0.7);
       }
 
       .td-calendar__day-events {
@@ -280,16 +272,11 @@ function CalendarStyles() {
         align-items: flex-start;
         gap: 0.75rem;
         padding: 0.75rem;
-        background: rgba(255, 255, 255, 0.06);
         border-radius: 0.5rem;
         transition: all 0.15s ease;
         cursor: pointer;
         text-decoration: none;
         color: inherit;
-      }
-
-      .td-calendar__event-item:hover {
-        background: rgba(255, 255, 255, 0.1);
       }
 
       .td-calendar__event-time {
@@ -307,7 +294,6 @@ function CalendarStyles() {
 
       .td-calendar__event-title {
         font-weight: 600;
-        color: white;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -319,11 +305,6 @@ function CalendarStyles() {
         gap: 0.5rem;
         margin-top: 0.25rem;
         font-size: 0.75rem;
-        color: rgba(209, 213, 219, 0.85);
-      }
-
-      .td-calendar__event-group {
-        color: rgba(209, 213, 219, 0.7);
       }
 
       .td-calendar__online-badge {
@@ -343,16 +324,250 @@ function CalendarStyles() {
       .td-calendar__no-events {
         padding: 1rem;
         font-size: 0.875rem;
-        color: rgba(209, 213, 219, 0.6);
         font-style: italic;
       }
 
       .td-calendar__empty-state {
         padding: 3rem;
         text-align: center;
+      }
+
+      /* ============================================
+         DARK VARIANT (glass-dark style)
+         ============================================ */
+      .td-calendar--dark {
+        background: rgba(28, 36, 56, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow:
+          inset 0 1px 1px 0 rgba(255, 255, 255, 0.05),
+          0 8px 24px -4px rgba(0, 0, 0, 0.15);
+      }
+
+      .td-calendar--dark .td-calendar__header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .td-calendar--dark .td-calendar__title {
+        color: white;
+      }
+
+      .td-calendar--dark .td-calendar__body {
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      }
+
+      .td-calendar--dark .td-calendar__day-row {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .td-calendar--dark .td-calendar__day-row--today {
+        background: rgba(59, 130, 246, 0.1);
+      }
+
+      .td-calendar--dark .td-calendar__day-header {
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(28, 36, 56, 0.95);
+      }
+
+      .td-calendar--dark .td-calendar__day-row--today .td-calendar__day-header {
+        background: rgba(59, 130, 246, 0.15);
+      }
+
+      .td-calendar--dark .td-calendar__day-weekday {
+        color: rgba(209, 213, 219, 0.9);
+      }
+
+      .td-calendar--dark .td-calendar__day-date {
+        color: white;
+      }
+
+      .td-calendar--dark .td-calendar__day-month {
         color: rgba(209, 213, 219, 0.7);
       }
 
+      .td-calendar--dark .td-calendar__event-item {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .td-calendar--dark .td-calendar__event-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .td-calendar--dark .td-calendar__event-title {
+        color: white;
+      }
+
+      .td-calendar--dark .td-calendar__event-meta {
+        color: rgba(209, 213, 219, 0.85);
+      }
+
+      .td-calendar--dark .td-calendar__event-group {
+        color: rgba(209, 213, 219, 0.7);
+      }
+
+      .td-calendar--dark .td-calendar__no-events {
+        color: rgba(209, 213, 219, 0.6);
+      }
+
+      .td-calendar--dark .td-calendar__empty-state {
+        color: rgba(209, 213, 219, 0.7);
+      }
+
+      /* ============================================
+         LIGHT VARIANT
+         ============================================ */
+      .td-calendar--light {
+        background: white;
+        border: 1px solid #E5E7EB;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .td-calendar--light .td-calendar__header {
+        border-bottom: 1px solid #E5E7EB;
+      }
+
+      .td-calendar--light .td-calendar__title {
+        color: #111827;
+      }
+
+      .td-calendar--light .td-calendar__body {
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+      }
+
+      .td-calendar--light .td-calendar__day-row {
+        border-bottom: 1px solid #F3F4F6;
+      }
+
+      .td-calendar--light .td-calendar__day-row--today {
+        background: rgba(59, 130, 246, 0.05);
+      }
+
+      .td-calendar--light .td-calendar__day-header {
+        border-right: 1px solid #F3F4F6;
+        background: #F9FAFB;
+      }
+
+      .td-calendar--light .td-calendar__day-row--today .td-calendar__day-header {
+        background: rgba(59, 130, 246, 0.1);
+      }
+
+      .td-calendar--light .td-calendar__day-weekday {
+        color: #6B7280;
+      }
+
+      .td-calendar--light .td-calendar__day-date {
+        color: #111827;
+      }
+
+      .td-calendar--light .td-calendar__day-month {
+        color: #9CA3AF;
+      }
+
+      .td-calendar--light .td-calendar__event-item {
+        background: #F9FAFB;
+      }
+
+      .td-calendar--light .td-calendar__event-item:hover {
+        background: #F3F4F6;
+      }
+
+      .td-calendar--light .td-calendar__event-title {
+        color: #111827;
+      }
+
+      .td-calendar--light .td-calendar__event-meta {
+        color: #6B7280;
+      }
+
+      .td-calendar--light .td-calendar__event-group {
+        color: #9CA3AF;
+      }
+
+      .td-calendar--light .td-calendar__no-events {
+        color: #9CA3AF;
+      }
+
+      .td-calendar--light .td-calendar__empty-state {
+        color: #6B7280;
+      }
+
+      /* Light variant dark mode */
+      @media (prefers-color-scheme: dark) {
+        .td-calendar--light {
+          background: #111827;
+          border-color: #374151;
+        }
+
+        .td-calendar--light .td-calendar__header {
+          border-bottom-color: #374151;
+        }
+
+        .td-calendar--light .td-calendar__title {
+          color: #F9FAFB;
+        }
+
+        .td-calendar--light .td-calendar__day-row {
+          border-bottom-color: #1F2937;
+        }
+
+        .td-calendar--light .td-calendar__day-row--today {
+          background: rgba(59, 130, 246, 0.15);
+        }
+
+        .td-calendar--light .td-calendar__day-header {
+          border-right-color: #1F2937;
+          background: #1F2937;
+        }
+
+        .td-calendar--light .td-calendar__day-row--today .td-calendar__day-header {
+          background: rgba(59, 130, 246, 0.2);
+        }
+
+        .td-calendar--light .td-calendar__day-weekday {
+          color: #9CA3AF;
+        }
+
+        .td-calendar--light .td-calendar__day-date {
+          color: #F9FAFB;
+        }
+
+        .td-calendar--light .td-calendar__day-month {
+          color: #6B7280;
+        }
+
+        .td-calendar--light .td-calendar__event-item {
+          background: #1F2937;
+        }
+
+        .td-calendar--light .td-calendar__event-item:hover {
+          background: #374151;
+        }
+
+        .td-calendar--light .td-calendar__event-title {
+          color: #F9FAFB;
+        }
+
+        .td-calendar--light .td-calendar__event-meta {
+          color: #9CA3AF;
+        }
+
+        .td-calendar--light .td-calendar__event-group {
+          color: #6B7280;
+        }
+
+        .td-calendar--light .td-calendar__no-events {
+          color: #6B7280;
+        }
+
+        .td-calendar--light .td-calendar__empty-state {
+          color: #9CA3AF;
+        }
+      }
+
+      /* ============================================
+         RESPONSIVE
+         ============================================ */
       @media (max-width: 640px) {
         .td-calendar__day-header {
           width: 60px;

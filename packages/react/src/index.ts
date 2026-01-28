@@ -61,7 +61,7 @@ export { EventCard } from './components/EventCard';
 export type { EventCardProps, EventCardVariant } from './components/EventCard';
 
 export { Calendar } from './components/Calendar';
-export type { CalendarProps, CalendarEvent } from './components/Calendar';
+export type { CalendarProps, CalendarEvent, CalendarVariant } from './components/Calendar';
 
 // Person Components
 export { PersonCard } from './components/PersonCard';
