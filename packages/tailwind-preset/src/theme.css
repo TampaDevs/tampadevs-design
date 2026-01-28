@@ -7,6 +7,18 @@
  * @import "@tampadevs/tailwind-preset/theme.css";
  */
 
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Dark mode color scheme for proper browser integration */
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -33,8 +45,8 @@
   --color-td-blue-dark: #1A2031;
 }
 
-/* Glass morphism utilities - defined with @utility for @apply support */
-@utility glass {
+/* Glass morphism utilities with dark mode support */
+.glass {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   background: rgba(255, 255, 255, 0.7);
@@ -43,7 +55,13 @@
     0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
-@utility glass-card {
+@media (prefers-color-scheme: dark) {
+  .glass {
+    background: rgba(17, 24, 39, 0.7);
+  }
+}
+
+.glass-card {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   background: rgba(255, 255, 255, 0.8);
@@ -52,16 +70,44 @@
     0 4px 6px -1px rgba(0, 0, 0, 0.05),
     0 2px 4px -2px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-@utility glass-frost {
+@media (prefers-color-scheme: dark) {
+  .glass-card {
+    background: rgba(17, 24, 39, 0.8);
+    border-color: rgba(55, 65, 81, 0.5);
+  }
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 4px 6px -4px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-card:hover {
+    background: rgba(17, 24, 39, 0.9);
+  }
+}
+
+.glass-frost {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   background: rgba(255, 255, 255, 0.6);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-@utility glass-dark {
+@media (prefers-color-scheme: dark) {
+  .glass-frost {
+    background: rgba(17, 24, 39, 0.6);
+  }
+}
+
+.glass-dark {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   background: rgba(28, 36, 56, 0.8);
