@@ -19,6 +19,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     name: Publish to GitHub Packages
+    # Only run for v* tags or manual dispatch
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'v')
     permissions:
       contents: read
       packages: write
