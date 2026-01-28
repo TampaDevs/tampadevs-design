@@ -31,9 +31,6 @@ export function LogoMarquee({
   color = false,
   className,
 }: LogoMarqueeProps) {
-  // Duplicate logos for seamless loop
-  const allLogos = [...logos, ...logos];
-
   const renderLogo = (logo: MarqueeLogo, index: number) => {
     const img = (
       <img
@@ -80,8 +77,13 @@ export function LogoMarquee({
       } as React.CSSProperties}
     >
       {title && <h3 className="td-logo-marquee__title">{title}</h3>}
-      <div className="td-logo-marquee__track">
-        {allLogos.map(renderLogo)}
+      <div className="td-logo-marquee__wrapper">
+        <div className="td-logo-marquee__track">
+          {logos.map(renderLogo)}
+        </div>
+        <div className="td-logo-marquee__track" aria-hidden="true">
+          {logos.map((logo, i) => renderLogo(logo, i + logos.length))}
+        </div>
       </div>
 
       <style>{`
@@ -99,32 +101,38 @@ export function LogoMarquee({
           margin: 0 0 1.5rem 0;
         }
 
-        .td-logo-marquee__track {
+        .td-logo-marquee__wrapper {
           display: flex;
-          gap: var(--marquee-gap, 3rem);
+          width: max-content;
           animation: td-marquee var(--marquee-speed, 40s) linear infinite;
-          width: fit-content;
           mask-image: linear-gradient(
             to right,
             transparent,
-            black 10%,
-            black 90%,
+            black 5%,
+            black 95%,
             transparent
           );
           -webkit-mask-image: linear-gradient(
             to right,
             transparent,
-            black 10%,
-            black 90%,
+            black 5%,
+            black 95%,
             transparent
           );
         }
 
-        .td-logo-marquee--reverse .td-logo-marquee__track {
-          animation-name: td-marquee-reverse;
+        .td-logo-marquee__track {
+          display: flex;
+          gap: var(--marquee-gap, 3rem);
+          padding-right: var(--marquee-gap, 3rem);
+          flex-shrink: 0;
         }
 
-        .td-logo-marquee--pause-on-hover:hover .td-logo-marquee__track {
+        .td-logo-marquee--reverse .td-logo-marquee__wrapper {
+          animation-direction: reverse;
+        }
+
+        .td-logo-marquee--pause-on-hover:hover .td-logo-marquee__wrapper {
           animation-play-state: paused;
         }
 
@@ -134,15 +142,6 @@ export function LogoMarquee({
           }
           to {
             transform: translateX(-50%);
-          }
-        }
-
-        @keyframes td-marquee-reverse {
-          from {
-            transform: translateX(-50%);
-          }
-          to {
-            transform: translateX(0);
           }
         }
 

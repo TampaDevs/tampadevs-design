@@ -83,11 +83,13 @@ function SponsorCard({ sponsor, monochrome }: { sponsor: Sponsor; monochrome?: b
     >
       <div className="td-sponsor-grid__card-inner">
         <div className="td-sponsor-grid__shine" />
-        <img
-          src={sponsor.logo}
-          alt={sponsor.name}
-          className={clsx('td-sponsor-grid__logo', monochrome && 'td-sponsor-grid__logo--mono')}
-        />
+        <div className="td-sponsor-grid__logo-bg">
+          <img
+            src={sponsor.logo}
+            alt={sponsor.name}
+            className={clsx('td-sponsor-grid__logo', monochrome && 'td-sponsor-grid__logo--mono')}
+          />
+        </div>
         <span className="td-sponsor-grid__name">{sponsor.name}</span>
       </div>
     </a>
@@ -247,65 +249,62 @@ function SponsorGridStyles() {
       }
 
       .td-sponsor-grid__grid {
-        display: grid;
+        display: flex;
+        flex-wrap: wrap;
         gap: 1rem;
+        justify-content: center;
       }
 
-      .td-sponsor-grid__grid--mixed,
-      .td-sponsor-grid__grid--community {
-        grid-template-columns: repeat(2, 1fr);
+      /* Card widths by tier */
+      .td-sponsor-grid__grid--platinum .td-sponsor-grid__card {
+        width: calc(50% - 0.5rem);
+        max-width: 280px;
       }
 
-      @media (min-width: 640px) {
-        .td-sponsor-grid__grid--mixed,
-        .td-sponsor-grid__grid--community {
-          grid-template-columns: repeat(3, 1fr);
+      @media (max-width: 639px) {
+        .td-sponsor-grid__grid--platinum .td-sponsor-grid__card {
+          width: 100%;
+          max-width: 280px;
         }
       }
 
-      @media (min-width: 1024px) {
-        .td-sponsor-grid__grid--mixed,
-        .td-sponsor-grid__grid--community {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      .td-sponsor-grid__grid--platinum {
-        grid-template-columns: 1fr;
-      }
-
-      @media (min-width: 640px) {
-        .td-sponsor-grid__grid--platinum {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      .td-sponsor-grid__grid--gold {
-        grid-template-columns: repeat(2, 1fr);
+      .td-sponsor-grid__grid--gold .td-sponsor-grid__card {
+        width: calc(50% - 0.5rem);
+        max-width: 200px;
       }
 
       @media (min-width: 768px) {
-        .td-sponsor-grid__grid--gold {
-          grid-template-columns: repeat(3, 1fr);
+        .td-sponsor-grid__grid--gold .td-sponsor-grid__card {
+          width: calc(33.333% - 0.667rem);
+          max-width: 200px;
         }
       }
 
-      .td-sponsor-grid__grid--silver,
-      .td-sponsor-grid__grid--bronze {
-        grid-template-columns: repeat(2, 1fr);
+      .td-sponsor-grid__grid--silver .td-sponsor-grid__card,
+      .td-sponsor-grid__grid--bronze .td-sponsor-grid__card,
+      .td-sponsor-grid__grid--mixed .td-sponsor-grid__card,
+      .td-sponsor-grid__grid--community .td-sponsor-grid__card {
+        width: calc(50% - 0.5rem);
+        max-width: 160px;
       }
 
       @media (min-width: 640px) {
-        .td-sponsor-grid__grid--silver,
-        .td-sponsor-grid__grid--bronze {
-          grid-template-columns: repeat(3, 1fr);
+        .td-sponsor-grid__grid--silver .td-sponsor-grid__card,
+        .td-sponsor-grid__grid--bronze .td-sponsor-grid__card,
+        .td-sponsor-grid__grid--mixed .td-sponsor-grid__card,
+        .td-sponsor-grid__grid--community .td-sponsor-grid__card {
+          width: calc(33.333% - 0.667rem);
+          max-width: 160px;
         }
       }
 
       @media (min-width: 768px) {
-        .td-sponsor-grid__grid--silver,
-        .td-sponsor-grid__grid--bronze {
-          grid-template-columns: repeat(4, 1fr);
+        .td-sponsor-grid__grid--silver .td-sponsor-grid__card,
+        .td-sponsor-grid__grid--bronze .td-sponsor-grid__card,
+        .td-sponsor-grid__grid--mixed .td-sponsor-grid__card,
+        .td-sponsor-grid__grid--community .td-sponsor-grid__card {
+          width: calc(25% - 0.75rem);
+          max-width: 160px;
         }
       }
 
@@ -369,24 +368,36 @@ function SponsorGridStyles() {
         opacity: 1;
       }
 
+      .td-sponsor-grid__logo-bg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 0.5rem;
+        transform: translateZ(20px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        max-width: 160px;
+      }
+
+      .td-sponsor-grid__card:hover .td-sponsor-grid__logo-bg {
+        transform: translateZ(30px) scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
       .td-sponsor-grid__logo {
-        max-width: 80%;
-        max-height: 60px;
+        max-width: 100%;
+        max-height: 50px;
         height: auto;
         display: block;
         object-fit: contain;
-        transform: translateZ(20px);
-        transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+        transition: opacity 0.3s ease, filter 0.3s ease;
       }
 
       .td-sponsor-grid__logo--mono {
         filter: brightness(0) invert(1);
         opacity: 0.9;
-      }
-
-      .td-sponsor-grid__card:hover .td-sponsor-grid__logo {
-        opacity: 1;
-        transform: translateZ(30px) scale(1.05);
       }
 
       .td-sponsor-grid__name {

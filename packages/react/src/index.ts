@@ -11,6 +11,9 @@ export type { IconProps, IconSize } from './components/Icon';
 export { Avatar } from './components/Avatar';
 export type { AvatarProps, AvatarSize, AvatarShape, AvatarStatus } from './components/Avatar';
 
+export { AvatarGroup } from './components/AvatarGroup';
+export type { AvatarGroupProps, AvatarGroupItem, AvatarGroupSize } from './components/AvatarGroup';
+
 export { Logo } from './components/Logo';
 export type { LogoProps, LogoVariant, LogoSize } from './components/Logo';
 
