@@ -213,11 +213,24 @@ function EventCardStyles() {
         background: rgba(255, 255, 255, 0.8);
         border-radius: 0.75rem;
         border: 1px solid rgba(28, 36, 56, 0.1);
-        transition: border-color 0.15s ease;
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact {
+          background: rgba(17, 24, 39, 0.8);
+          border-color: rgba(55, 65, 81, 0.5);
+        }
       }
 
       .td-event-card-compact:hover {
         border-color: rgba(28, 36, 56, 0.3);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact:hover {
+          border-color: rgba(107, 114, 128, 0.5);
+        }
       }
 
       .td-event-card-compact__date {
@@ -232,15 +245,33 @@ function EventCardStyles() {
         color: #1C2438;
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact__month {
+          color: #D1D5DB;
+        }
+      }
+
       .td-event-card-compact__day {
         font-size: 1.5rem;
         font-weight: 700;
         color: #111827;
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact__day {
+          color: #F9FAFB;
+        }
+      }
+
       .td-event-card-compact__time {
         font-size: 0.75rem;
         color: #6B7280;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact__time {
+          color: #9CA3AF;
+        }
       }
 
       .td-event-card-compact__content {
@@ -258,8 +289,20 @@ function EventCardStyles() {
         transition: color 0.15s ease;
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact__title {
+          color: #F9FAFB;
+        }
+      }
+
       .td-event-card-compact__title:hover {
         color: #1C2438;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact__title:hover {
+          color: #FFFFFF;
+        }
       }
 
       .td-event-card-compact__group {
@@ -267,8 +310,20 @@ function EventCardStyles() {
         color: #6B7280;
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact__group {
+          color: #9CA3AF;
+        }
+      }
+
       .td-event-card-compact__group a:hover {
         color: #1C2438;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact__group a:hover {
+          color: #FFFFFF;
+        }
       }
 
       .td-event-card-compact__meta {
@@ -278,6 +333,12 @@ function EventCardStyles() {
         gap: 0.5rem;
         font-size: 0.75rem;
         color: #6B7280;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-compact__meta {
+          color: #6B7280;
+        }
       }
 
       .td-event-card__online-indicator {
@@ -449,6 +510,13 @@ function EventCardStyles() {
           inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default {
+          background: rgba(17, 24, 39, 0.8);
+          border-color: rgba(55, 65, 81, 0.5);
+        }
+      }
+
       .td-event-card-default:hover {
         background: rgba(255, 255, 255, 0.9);
         box-shadow:
@@ -457,12 +525,24 @@ function EventCardStyles() {
           inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default:hover {
+          background: rgba(17, 24, 39, 0.9);
+        }
+      }
+
       .td-event-card-default__image-wrapper {
         height: 10rem;
         flex-shrink: 0;
         background: #F3F4F6;
         position: relative;
         overflow: hidden;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__image-wrapper {
+          background: #1F2937;
+        }
       }
 
       .td-event-card-default__image {
@@ -485,6 +565,12 @@ function EventCardStyles() {
         color: #D1D5DB;
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__placeholder svg {
+          color: #4B5563;
+        }
+      }
+
       .td-event-card-default__date-badge {
         position: absolute;
         top: 0.75rem;
@@ -497,10 +583,23 @@ function EventCardStyles() {
         border: 1px solid rgba(255, 255, 255, 0.5);
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__date-badge {
+          background: rgba(17, 24, 39, 0.8);
+          border-color: rgba(55, 65, 81, 0.5);
+        }
+      }
+
       .td-event-card-default__badge-month {
         font-size: 0.75rem;
         font-weight: 600;
         color: #1C2438;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__badge-month {
+          color: #D1D5DB;
+        }
       }
 
       .td-event-card-default__badge-day {
@@ -508,6 +607,12 @@ function EventCardStyles() {
         font-weight: 700;
         color: #111827;
         line-height: 1.2;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__badge-day {
+          color: #F9FAFB;
+        }
       }
 
       .td-event-card-default__online-badge {
@@ -554,6 +659,12 @@ function EventCardStyles() {
         margin-bottom: 0.25rem;
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__time {
+          color: #9CA3AF;
+        }
+      }
+
       .td-event-card-default__title {
         font-weight: 600;
         color: #111827;
@@ -566,14 +677,32 @@ function EventCardStyles() {
         margin: 0;
       }
 
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__title {
+          color: #F9FAFB;
+        }
+      }
+
       .td-event-card-default__title:hover {
         color: #1C2438;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__title:hover {
+          color: #FFFFFF;
+        }
       }
 
       .td-event-card-default__group {
         font-size: 0.875rem;
         color: #6B7280;
         margin-top: 0.25rem;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__group {
+          color: #9CA3AF;
+        }
       }
 
       .td-event-card-default__group a {
@@ -583,6 +712,12 @@ function EventCardStyles() {
 
       .td-event-card-default__group a:hover {
         color: #1C2438;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__group a:hover {
+          color: #FFFFFF;
+        }
       }
 
       .td-event-card-default__spacer {
@@ -598,6 +733,12 @@ function EventCardStyles() {
         justify-content: space-between;
         font-size: 0.75rem;
         color: #6B7280;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .td-event-card-default__footer {
+          border-top-color: #1F2937;
+        }
       }
 
       .td-event-card-default__location {
