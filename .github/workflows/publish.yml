@@ -1,0 +1,91 @@
+name: "Publish Packages"
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (don't actually publish)"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: publish-packages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish to GitHub Packages
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@tampadevs"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Generate version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            # Use release tag version (strip leading 'v')
+            VERSION="${{ github.event.release.tag_name }}"
+            VERSION="${VERSION#v}"
+          else
+            # CalVer: 0.YYYYMMDD.HHMM
+            VERSION="0.$(date -u +'%Y%m%d.%H%M')"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
+
+      - name: Update package versions
+        run: |
+          for pkg in packages/*/package.json; do
+            jq --arg v "${{ steps.version.outputs.version }}" '.version = $v' "$pkg" > tmp.json
+            mv tmp.json "$pkg"
+          done
+
+      - name: Configure npm for GitHub Packages
+        run: |
+          echo "@tampadevs:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+
+      - name: Publish packages (dry run)
+        if: inputs.dry_run == true
+        run: |
+          cd packages/tokens && pnpm publish --no-git-checks --dry-run || true
+          cd ../react && pnpm publish --no-git-checks --dry-run || true
+          cd ../tailwind-preset && pnpm publish --no-git-checks --dry-run || true
+
+      - name: Publish packages
+        if: inputs.dry_run != true
+        run: |
+          cd packages/tokens && pnpm publish --no-git-checks || true
+          cd ../react && pnpm publish --no-git-checks || true
+          cd ../tailwind-preset && pnpm publish --no-git-checks || true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

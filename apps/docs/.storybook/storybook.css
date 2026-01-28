@@ -1,0 +1,49 @@
+/* Storybook Global Styles */
+
+/* Load Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Base styles */
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Ensure the Storybook preview area has proper background */
+.sb-show-main {
+  background: inherit;
+}
+
+/* Visual background to showcase glass morphism effects */
+.sb-show-main.sb-main-padded {
+  position: relative;
+  background:
+    /* Prominent coral glow in top-left */
+    radial-gradient(ellipse 600px 400px at 15% 10%, rgba(232, 90, 79, 0.35) 0%, transparent 70%),
+    /* Navy-light blob center-right */
+    radial-gradient(ellipse 500px 500px at 85% 40%, rgba(43, 52, 71, 0.6) 0%, transparent 70%),
+    /* Sand accent bottom-left */
+    radial-gradient(ellipse 400px 300px at 20% 85%, rgba(182, 169, 145, 0.25) 0%, transparent 70%),
+    /* Subtle blue accent */
+    radial-gradient(ellipse 300px 300px at 70% 75%, rgba(59, 130, 246, 0.15) 0%, transparent 70%),
+    /* Base gradient */
+    linear-gradient(135deg, #0a0f1a 0%, #131b2e 50%, #0f172a 100%);
+  min-height: 100vh;
+}
+
+/* Add subtle grid pattern for depth */
+.sb-show-main.sb-main-padded::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}

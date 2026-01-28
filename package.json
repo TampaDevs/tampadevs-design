@@ -1,0 +1,34 @@
+{
+  "name": "tampadevs-design",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tampa Devs Design System - Components, tokens, and utilities for Tampa Devs web properties",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TampaDevs/tampadevs-design.git"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "storybook": "pnpm --filter @tampadevs/docs dev",
+    "build:storybook": "pnpm --filter @tampadevs/docs build",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "@storybook/addon-vitest": "^10.2.1",
+    "turbo": "^2.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.18",
+    "playwright": "^1.58.0",
+    "@vitest/browser-playwright": "^4.0.18",
+    "@vitest/coverage-v8": "^4.0.18"
+  }
+}

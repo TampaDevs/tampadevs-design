@@ -1,0 +1,32 @@
+/**
+ * Tampa Devs React Components - Shared Styles
+ * Import this alongside @tampadevs/tailwind-preset/theme.css
+ */
+
+/* Component Base Styles */
+.td-glass {
+  background: rgba(28, 36, 56, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.05),
+    0 8px 24px -4px rgba(0, 0, 0, 0.15);
+}
+
+.td-glass:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 32px -8px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Transitions */
+.td-transition-base {
+  transition: all 0.2s ease;
+}
+
+.td-transition-fast {
+  transition: all 0.15s ease;
+}
