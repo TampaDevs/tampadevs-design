@@ -11,6 +11,7 @@ export interface AvatarProps {
   size?: AvatarSize;
   shape?: AvatarShape;
   ring?: boolean;
+  ringColor?: string;
   status?: AvatarStatus;
   className?: string;
 }
@@ -59,6 +60,7 @@ export function Avatar({
   size = 'md',
   shape = 'circle',
   ring = false,
+  ringColor,
   status,
   className,
 }: AvatarProps) {
@@ -81,6 +83,7 @@ export function Avatar({
           '--status-size': statusSize.size,
           '--status-bottom': statusSize.bottom,
           '--status-right': statusSize.right,
+          ...(ringColor ? { '--avatar-ring-color': ringColor } : {}),
         } as React.CSSProperties}
       >
         {src ? (
@@ -121,7 +124,7 @@ function AvatarStyles() {
       }
 
       .td-avatar--ring {
-        box-shadow: 0 0 0 3px #E85A4F;
+        box-shadow: 0 0 0 3px var(--avatar-ring-color, #E85A4F);
       }
 
       .td-avatar__image {

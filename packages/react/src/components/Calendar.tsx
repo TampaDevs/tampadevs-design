@@ -219,6 +219,7 @@ function CalendarStyles() {
 
       .td-calendar__day-row {
         display: flex;
+        overflow: hidden;
       }
 
       .td-calendar__day-row:last-child {
@@ -261,6 +262,7 @@ function CalendarStyles() {
 
       .td-calendar__day-events {
         flex: 1;
+        min-width: 0;
         padding: 0.75rem 1rem;
         display: flex;
         flex-direction: column;
@@ -294,14 +296,14 @@ function CalendarStyles() {
 
       .td-calendar__event-title {
         font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow-wrap: break-word;
+        word-break: break-word;
       }
 
       .td-calendar__event-meta {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 0.5rem;
         margin-top: 0.25rem;
         font-size: 0.75rem;
