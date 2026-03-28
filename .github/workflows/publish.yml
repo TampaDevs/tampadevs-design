@@ -16,14 +16,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
-    name: Publish to GitHub Packages
-    # Only run for v* tags or manual dispatch
+    name: Build and test
     if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'v')
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
@@ -36,8 +32,6 @@ jobs:
         with:
           node-version: "22"
           cache: "pnpm"
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@tampadevs"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -52,11 +46,9 @@ jobs:
         id: version
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
-            # Use release tag version (strip leading 'v')
             VERSION="${{ github.event.release.tag_name }}"
             VERSION="${VERSION#v}"
           else
-            # CalVer: 0.YYYYMMDD.HHMM
             VERSION="0.$(date -u +'%Y%m%d.%H%M')"
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -69,10 +61,68 @@ jobs:
             mv tmp.json "$pkg"
           done
 
-      - name: Configure npm for GitHub Packages
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: packages/
+
+  publish-npm:
+    runs-on: ubuntu-latest
+    name: Publish to npm
+    needs: build
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: packages/
+
+      - name: Setup Node.js for npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish packages (dry run)
+        if: inputs.dry_run == true
         run: |
-          echo "@tampadevs:registry=https://npm.pkg.github.com" >> .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          cd packages/tokens && npm publish --access public --dry-run || true
+          cd ../react && npm publish --access public --dry-run || true
+          cd ../tailwind-preset && npm publish --access public --dry-run || true
+
+      - name: Publish packages
+        if: inputs.dry_run != true
+        run: |
+          cd packages/tokens && npm publish --access public --provenance || true
+          cd ../react && npm publish --access public --provenance || true
+          cd ../tailwind-preset && npm publish --access public --provenance || true
+
+  publish-github:
+    runs-on: ubuntu-latest
+    name: Publish to GitHub Packages
+    needs: build
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: packages/
+
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@tampadevs"
 
       - name: Publish packages (dry run)
         if: inputs.dry_run == true
