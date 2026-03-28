@@ -52,6 +52,11 @@
       "optional": true
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TampaDevs/tampadevs-design.git",
+    "directory": "packages/react"
+  },
   "publishConfig": {
     "access": "public"
   }
