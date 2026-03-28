@@ -98,9 +98,9 @@ jobs:
       - name: Publish packages
         if: inputs.dry_run != true
         run: |
-          cd packages/tokens && npm publish --access public --provenance || true
-          cd ../react && npm publish --access public --provenance || true
-          cd ../tailwind-preset && npm publish --access public --provenance || true
+          cd packages/tokens && npm publish --access public || true
+          cd ../react && npm publish --access public || true
+          cd ../tailwind-preset && npm publish --access public || true
 
   publish-github:
     runs-on: ubuntu-latest
