@@ -18,7 +18,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "storybook": "^10.2.1",
-    "vite": "^6.0.0"
+    "vite": "^6.4.2"
   },
   "dependencies": {
     "@tampadevs/react": "workspace:*",
